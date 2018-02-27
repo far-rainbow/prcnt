@@ -14,7 +14,7 @@ if ($model->load(Yii::$app->request->post()) && $model->validate()) {
    
 ?>
 <br>
-<p>Отчёт:</p>
+<p>Отчёт отладочный:</p>
 <ul>
 	<li><label>a</label>: <?= Html::encode($model->functionList) ?></li>
 	<li><label>b</label>: <?= Html::encode($model->countWeekList) ?></li>
@@ -22,8 +22,12 @@ if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 	<li><label>d</label>: <?= Html::encode($model->periodTypeList) ?></li>
 </ul>
 
-<div class="panel panel-default">
-	<div class="eList">
+<div class="panel panel-success">
+    <div class="panel panel-heading">
+    	Неделя
+    </div>
+    
+	<div class="eList panel-body">
 
 <?php 
 
@@ -40,15 +44,13 @@ if ($model->functionList==1) {
     // старшая граница периода в днях = кол-во недель умножить на 7 дней и вычесть из младшей границы  
     $rangeDay = date('Y-m-d',strtotime($lastRowDate . '-'.$days.' days'));
 
-    //var_dump($lastRowDate);
-    //var_dump($rangeDay);
-    
+    // запрос к БД    
     $data = Coords::find()->where([
         '>=','DATE(timestamp)',$rangeDay
     ])->all();
 
-    //$wait_prcnt[];// = $lastRowDate;
-    
+    // обработка результата    
+    $alertDay = 0;
     $wait_prcnt = array();
     
     foreach ($data as $e) {
@@ -60,8 +62,24 @@ if ($model->functionList==1) {
         }
     }
     
+/*     foreach ($wait_prcnt as $wp => $wd) {
+        
+        if ($wd<$c)
+        {
+            $c=$wd;
+            $alertDay=$wp;
+        }
+    } */
+    
+    $alertDay = array_search((min($wait_prcnt)),$wait_prcnt);
+    
     foreach ($wait_prcnt as $wp => $wd) {
-        print $wp.' -- сумма полного дня wait_prcnt --> '.$wd."<br>";
+        if ($alertDay == $wp) {
+            print $wp.' -- сумма полного дня wait_prcnt --> '.$wd." -- минимальное значение из представленных<br>";
+        } else {
+            print $wp.' -- сумма полного дня wait_prcnt --> '.$wd."<br>";
+        }
+        
     }
 
 }
