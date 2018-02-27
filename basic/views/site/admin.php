@@ -22,24 +22,49 @@ if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 	<li><label>d</label>: <?= Html::encode($model->periodTypeList) ?></li>
 </ul>
 
-<p>Search query stat:</p>
-<ul>
-	<li><label>This video is #<?= $model->defaultFunctionList ?> in search results made by key "<?= Html::encode($model->defaultFunctionList) ?>"</label></li>
-</ul>
-
 <div class="panel panel-default">
 	<div class="eList">
 
 <?php 
 
-//$data2 = Coords::find()->all();
+$weeks = 1;
+$days = $weeks*7 - 1;
 
+// Дата крайней записи в таблице $lastRowDate
+$R = Coords::find()->orderBy(['timestamp'=>SORT_DESC])->limit(1)->all();
+$lastRowDate = $R[0]['timestamp'];
 
+// Функция №1 (других пока что нет)
+if ($model->functionList==1) {
 
+    // старшая граница периода в днях = кол-во недель умножить на 7 дней и вычесть из младшей границы  
+    $rangeDay = date('Y-m-d',strtotime($lastRowDate . '-'.$days.' days'));
 
+    //var_dump($lastRowDate);
+    //var_dump($rangeDay);
+    
+    $data = Coords::find()->where([
+        '>=','DATE(timestamp)',$rangeDay
+    ])->all();
 
-    //print (count($data2));
+    //$wait_prcnt[];// = $lastRowDate;
+    
+    $wait_prcnt = array();
+    
+    foreach ($data as $e) {
+        $iterDay = date('Y-m-d',strtotime($e['timestamp']));
+        if (isset($wait_prcnt[$iterDay])) {
+            $wait_prcnt[$iterDay] += $e['wait_prcnt'];
+        } else {
+            $wait_prcnt[$iterDay] = 0;
+        }
+    }
+    
+    foreach ($wait_prcnt as $wp => $wd) {
+        print $wp.' -- сумма полного дня wait_prcnt --> '.$wd."<br>";
+    }
 
+}
 
 ?>
 
