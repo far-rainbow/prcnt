@@ -126,9 +126,9 @@ if ($model->functionList==1) {
 		<div class="col-md-4">
 			<div class="item">
         			<?= $form->field($model, 'functionList')->dropDownList(['Функция' => $model->functionList])->label($model->functionListFieldName)->hint('Тип обработки (логика)') ?>
-        			<?= $form->field($model, 'periodTypeList')->dropDownList(['Период в часах' => $model->periodTypeList])->label($model->periodTypeListName)->hint('12 или 15 обсчитываемых часов в сутках') ?>
-        			<?= $form->field($model, 'startHourList')->dropDownList(['Час начала дня' => $model->startHourList],array('empty' => 'Type what you need here',))->label($model->startHourListName)->hint('начало дня') ?>
-        			<?= $form->field($model, 'countWeekList')->dropDownList(['Количество недель' => $model->countWeekList],['options'=>['2' => ['selected'=>'selected']]])->label($model->countWeekListName)->hint('1,2,3,4') ?>
+        			<?= $form->field($model, 'periodTypeList')->dropDownList(['Суточный интервал в часах' => $model->periodTypeList])->label($model->periodTypeListName)->hint('12 или 15 обсчитываемых часов в сутках') ?>
+        			<?= $form->field($model, 'startHourList')->dropDownList(['Час начала дневного интервала' => $model->startHourList],array('empty' => 'Type what you need here',))->label($model->startHourListName)->hint('начало дня') ?>
+        			<?= $form->field($model, 'countWeekList')->dropDownList(['Количество исследуемых недель' => $model->countWeekList],['options'=>['2' => ['selected'=>'selected']]])->label($model->countWeekListName)->hint('1,2,3,4') ?>
         	</div>
 		</div>
 
