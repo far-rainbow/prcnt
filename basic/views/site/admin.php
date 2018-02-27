@@ -44,6 +44,15 @@ $days = $weeks*7 - 1;
 // Дата крайней записи в таблице $lastRowDate
 $R = Coords::find()->orderBy(['timestamp'=>SORT_DESC])->limit(1)->all();
 $lastRowDate = $R[0]['timestamp'];
+$lastRowHour = date('H',strtotime($lastRowDate));
+
+if ($lastRowHour-$startHourList[$model->startHourList]>$periodTypeList[$model->periodTypeList]) {
+    $currentDayOk = true;
+    var_dump($currentDayOk);
+} else {
+    $currentDayOk = false;
+    var_dump($currentDayOk);
+}
 
 // Функция №1 (других пока что нет)
 if ($model->functionList==1) {
@@ -84,10 +93,10 @@ if ($model->functionList==1) {
     $alertDay = array_search((min($wait_prcnt)),$wait_prcnt);
     
     $delim = 0;
-    foreach ($wait_prcnt as $wp => $wd) {
+    foreach (array_reverse($wait_prcnt) as $wp => $wd) {
         
         if($delim++%7==0) {
-            print ('--- Неделя №'.(int)($delim/7+1).'<br>');
+            print ('<br>--- Неделя №'.(int)($delim/7+1).'<br>');
         }
         
         if ($alertDay == $wp) {
