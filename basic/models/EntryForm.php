@@ -62,6 +62,24 @@ class EntryForm extends Model
         
     }
     
+    public function dateru($str) {
+        $day = "";
+
+        switch($str) {
+            
+            case 'Monday':$day = "Понедельник";break;
+            case 'Tuesday':$day = "Вторник";break;
+            case 'Wednesday':$day = "Среда";break;
+            case 'Thursday':$day = "Четверг";break;
+            case 'Friday':$day = "Пятница";break;
+            case 'Saturday':$day = "Суббота";break;
+            case 'Sunday':$day = "Воскресенье";break;
+            
+        }
+        
+        return $day;
+    }
+    
     public function rules()
     {
         return [

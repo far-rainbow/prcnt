@@ -4,6 +4,8 @@ use yii\widgets\ActiveForm;
 use app\models\EntryForm;
 use app\models\Coords;
 
+setlocale(LC_ALL, 'ru_RU.UTF-8');
+
 $model = new EntryForm();
 
 //$model->countWeekList = $model->defaultCountWeekList;
@@ -17,7 +19,7 @@ if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 <p>Отчёт отладочный:</p>
 <ul>
 	<li><label>a</label>: <?= Html::encode($model->functionList) ?></li>
-	<li><label>b</label>: <?= Html::encode($model->countWeekList) ?></li>
+	<li><label>Недели</label>: <?= Html::encode($model->countWeekList) ?></li>
 	<li><label>c</label>: <?= Html::encode($model->startHourList) ?></li>
 	<li><label>d</label>: <?= Html::encode($model->periodTypeList) ?></li>
 </ul>
@@ -31,7 +33,7 @@ if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
 <?php 
 
-$weeks = 1;
+$weeks = $model->countWeekList;
 $days = $weeks*7 - 1;
 
 // Дата крайней записи в таблице $lastRowDate
@@ -62,24 +64,20 @@ if ($model->functionList==1) {
         }
     }
     
-/*     foreach ($wait_prcnt as $wp => $wd) {
-        
-        if ($wd<$c)
-        {
-            $c=$wd;
-            $alertDay=$wp;
-        }
-    } */
-    
     $alertDay = array_search((min($wait_prcnt)),$wait_prcnt);
     
+    $delim = 0;
     foreach ($wait_prcnt as $wp => $wd) {
-        if ($alertDay == $wp) {
-            print $wp.' -- сумма полного дня wait_prcnt --> '.$wd." -- минимальное значение из представленных<br>";
-        } else {
-            print $wp.' -- сумма полного дня wait_prcnt --> '.$wd."<br>";
+        
+        if($delim++%7==0) {
+            print ('--- Неделя №'.(int)($delim/7+1).'<br>');
         }
         
+        if ($alertDay == $wp) {
+            print $wp.' -- сумма полного дня wait_prcnt ('. $model->dateru(date('l',strtotime($wp))).') --> '.$wd." -- минимальное значение из представленных<br>";
+        } else {
+            print $wp.' -- сумма полного дня wait_prcnt ('. $model->dateru(date('l',strtotime($wp))).') --> '.$wd."<br>";
+        }
     }
 
 }
