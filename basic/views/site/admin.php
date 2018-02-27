@@ -7,6 +7,7 @@ use app\models\Coords;
 setlocale(LC_ALL, 'ru_RU.UTF-8');
 
 $model = new EntryForm();
+
 $functionList = $model->functionList;
 $periodTypeList = $model->periodTypeList;
 $startHourList=$model->startHourList;
@@ -60,10 +61,20 @@ if ($model->functionList==1) {
     $wait_prcnt = array();
     
     foreach ($data as $e) {
+        
         $iterDay = date('Y-m-d',strtotime($e['timestamp']));
+        
+        // если накопительный массив нулёвый, то к else, если там ноль или сумма, то пытаемся накопить
         if (isset($wait_prcnt[$iterDay])) {
-            $wait_prcnt[$iterDay] += $e['wait_prcnt'];
+            
+            // если в рамках заданного часового периода, то накапливаем, если нет, то игнорируем этот временной промежуток (1/4 часа на итерацию на данный момент)
+            if ($model->timeRange($e['timestamp'],$startHourList[$model->startHourList],$periodTypeList[$model->periodTypeList])) {
+                $wait_prcnt[$iterDay] += $e['wait_prcnt'];
+                //print();
+            }
+            
         } else {
+            // нулёвый инициализируем нолём
             $wait_prcnt[$iterDay] = 0;
         }
     }
@@ -78,9 +89,9 @@ if ($model->functionList==1) {
         }
         
         if ($alertDay == $wp) {
-            print $wp.' -- сумма полного дня wait_prcnt ('. $model->dateru(date('l',strtotime($wp))).') --> '.$wd." -- минимальное значение из представленных<br>";
+            print $wp.' -- сумма дня с '.$startHourList[$model->startHourList].' по '.($startHourList[$model->startHourList]+$periodTypeList[$model->periodTypeList]).' ч. ('. $model->dateru(date('l',strtotime($wp))).') --> '.$wd." -- минимальное значение из представленных<br>";
         } else {
-            print $wp.' -- сумма полного дня wait_prcnt ('. $model->dateru(date('l',strtotime($wp))).') --> '.$wd."<br>";
+            print $wp.' -- сумма дня с '.$startHourList[$model->startHourList].' по '.($startHourList[$model->startHourList]+$periodTypeList[$model->periodTypeList]).' ч. ('. $model->dateru(date('l',strtotime($wp))).') --> '.$wd."<br>";
         }
     }
 

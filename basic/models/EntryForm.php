@@ -61,8 +61,16 @@ class EntryForm extends Model
         return 'TEST';
         
     }
+
+    // проверка для 12-часового дневного периода
+    public function timeRange($tr,$sh,$tp=12) {
+        if( (date('H',strtotime($tr)) >= $sh) && (date('H',strtotime($tr)) <= $sh+$tp-1)) {
+        return true;
+        }
+        return false;
+    }
     
-    public function dateru($str) {
+    static public function dateru($str) {
         $day = "";
 
         switch($str) {
