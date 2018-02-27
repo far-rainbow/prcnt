@@ -7,6 +7,10 @@ use app\models\Coords;
 setlocale(LC_ALL, 'ru_RU.UTF-8');
 
 $model = new EntryForm();
+$functionList = $model->functionList;
+$periodTypeList = $model->periodTypeList;
+$startHourList=$model->startHourList;
+$countWeekList=$model->countWeekList;
 
 //$model->countWeekList = $model->defaultCountWeekList;
 
@@ -18,10 +22,10 @@ if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 <br>
 <p>Отчёт отладочный:</p>
 <ul>
-	<li><label>a</label>: <?= Html::encode($model->functionList) ?></li>
-	<li><label>Недели</label>: <?= Html::encode($model->countWeekList) ?></li>
-	<li><label>c</label>: <?= Html::encode($model->startHourList) ?></li>
-	<li><label>d</label>: <?= Html::encode($model->periodTypeList) ?></li>
+	<li><label>Функция</label>: <?= Html::encode($functionList[$model->functionList]) ?></li>
+	<li><label>Период в часах</label>: <?= Html::encode($periodTypeList[$model->periodTypeList]) ?></li>
+	<li><label>Начало суточного периода</label>: <?= Html::encode($startHourList[$model->startHourList]) ?></li>
+	<li><label>Недели</label>: <?= Html::encode($countWeekList[$model->countWeekList]) ?></li>
 </ul>
 
 <div class="panel panel-success">
