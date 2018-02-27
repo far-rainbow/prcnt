@@ -89,9 +89,9 @@ if ($model->functionList==1) {
         }
         
         if ($alertDay == $wp) {
-            print $wp.' -- сумма дня с '.$startHourList[$model->startHourList].' по '.(($startHourList[$model->startHourList]+$periodTypeList[$model->periodTypeList])%24).' ч. ('. $model->dateru(date('l',strtotime($wp))).') --> '.$wd." -- минимальное значение из представленных<br>";
+            print $wp.' ('. $model->dateru(date('l',strtotime($wp))).') -- сумма дня с '.$startHourList[$model->startHourList].' по '.(($startHourList[$model->startHourList]+$periodTypeList[$model->periodTypeList])%24).' ч. --> '.$wd." -- минимальное значение из представленных<br>";
         } else {
-            print $wp.' -- сумма дня с '.$startHourList[$model->startHourList].' по '.(($startHourList[$model->startHourList]+$periodTypeList[$model->periodTypeList])%24).' ч. ('. $model->dateru(date('l',strtotime($wp))).') --> '.$wd."<br>";
+            print $wp.' ('. $model->dateru(date('l',strtotime($wp))).') -- сумма дня с '.$startHourList[$model->startHourList].' по '.(($startHourList[$model->startHourList]+$periodTypeList[$model->periodTypeList])%24).' ч. --> '.$wd."<br>";
         }
     }
 
