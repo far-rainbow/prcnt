@@ -62,12 +62,27 @@ class EntryForm extends Model
         
     }
 
-    // проверка для 12-часового дневного периода
-    public function timeRange($tr,$sh,$tp=12) {
-        if( (date('H',strtotime($tr)) >= $sh) && (date('H',strtotime($tr)) <= $sh+$tp-1)) {
-        return true;
+    // tr = проверяемая на соответствие дата (таймштамп из выболрки из бд с часами и минутами Y-m-d H-M-s)
+    // sh = начальный час интервала в сутках
+    // tp = 12 или 15 часов интервал
+    public function timeRange($tr,$sh,$tp) {
+
+        // int час для проверки на соответствие интервалу
+        $hour = date('H',strtotime($tr));
+        
+        // 12-часовой интервал
+        if ($tp==12) {
+            if( ($hour >= $sh) && ($hour <= $sh+$tp-1)) {
+                return true;
+            }
+            return false;
+        } else {
+            // 15-часовой интервал с отбросом 3-х часов в середине интервала
+            if( (($hour >= $sh) && ($hour <= $sh+$tp-1)) || (($hour < $sh+4) && ($hour > $sh+6))  ) {
+                return true;
+            }
+            return false;
         }
-        return false;
     }
     
     static public function dateru($str) {
