@@ -42,16 +42,28 @@ $weeks = $model->countWeekList;
 $days = $weeks*7 - 1;
 
 // Дата крайней записи в таблице $lastRowDate
-$R = Coords::find()->orderBy(['timestamp'=>SORT_DESC])->limit(1)->all();
-$lastRowDate = $R[0]['timestamp'];
+// это задел на взятие крайнего дня в БД (предположительно текущий день)
+ $R = Coords::find()->orderBy(['timestamp'=>SORT_DESC])->limit(1)->all();
+ $lastRowDate = $R[0]['timestamp'];
+
+$R = Coords::find()->select([
+    "DAYNAME('2018-02-28')"
+])->all();
+
+var_dump($R);
+
+//$lastRowDate = $R[0]['timestamp'];
+
+//$lastRowDate = $model->getLastSunday($R);
+
 $lastRowHour = date('H',strtotime($lastRowDate));
 
 if ($lastRowHour-$startHourList[$model->startHourList]>$periodTypeList[$model->periodTypeList]) {
     $currentDayOk = true;
-    var_dump($currentDayOk);
+    //var_dump($currentDayOk);
 } else {
     $currentDayOk = false;
-    var_dump($currentDayOk);
+    //var_dump($currentDayOk);
 }
 
 // Функция №1 (других пока что нет)

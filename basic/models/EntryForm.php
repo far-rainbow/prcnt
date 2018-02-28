@@ -103,6 +103,16 @@ class EntryForm extends Model
         return $day;
     }
     
+    public function getLastSunday($R) {
+        
+        foreach ($R as $D) {
+            //if ( date('l',strtotime($D['timestamp']))==='Sunday' ) {
+            var_dump($D['timestamp']);
+            //}
+        }
+        
+    }
+    
     public function rules()
     {
         return [
