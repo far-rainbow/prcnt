@@ -103,11 +103,11 @@ if ($model->functionList==1) {
         
         if ($alertDay == $wp) {
             echo '<li class="list-group-item-success">';
-            print $wp.' ('. $model->dateru(date('l',strtotime($wp))).') -- сумма дня с '.$startHourList[$model->startHourList].' по '.(($startHourList[$model->startHourList]+$periodTypeList[$model->periodTypeList])%24).' ч. --> '.$wd." -- минимальное значение<br>";
+            print $wp.' ('. $model->dateru(date('l',strtotime($wp))).') wait_prcnt '.$startHourList[$model->startHourList].' по '.(($startHourList[$model->startHourList]+$periodTypeList[$model->periodTypeList])%24).' ч. --> '.$wd." -- минимальное значение<br>";
             echo '</li>';
         } else {
             echo '<li class="list-group-item-default">';
-            print $wp.' ('. $model->dateru(date('l',strtotime($wp))).') -- сумма дня с '.$startHourList[$model->startHourList].' по '.(($startHourList[$model->startHourList]+$periodTypeList[$model->periodTypeList])%24).' ч. --> '.$wd."<br>";
+            print $wp.' ('. $model->dateru(date('l',strtotime($wp))).') wait_prcnt '.$startHourList[$model->startHourList].' по '.(($startHourList[$model->startHourList]+$periodTypeList[$model->periodTypeList])%24).' ч. --> '.$wd."<br>";
             echo '</li>';
         }
     }
