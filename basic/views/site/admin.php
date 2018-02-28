@@ -49,7 +49,6 @@ $days = $weeks*7 - 1;
 //var_dump($R);
 
 $lastRowDate = $R[0]['timestamp'];
-var_dump($lastRowDate);
 
 //$lastRowDate = $model->getLastSunday($R);
 
