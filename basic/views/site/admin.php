@@ -20,8 +20,6 @@ if ($model->load(Yii::$app->request->post()) && $model->validate()) {
     $model->result();    
    
 ?>
-<br>
-<p>Отчёт отладочный:</p>
 <ul>
 	<li><label>Функция</label>: <?= Html::encode($functionList[$model->functionList]) ?></li>
 	<li><label>Период в часах</label>: <?= Html::encode($periodTypeList[$model->periodTypeList]) ?></li>
@@ -46,25 +44,22 @@ $days = $weeks*7 - 1;
  $R = Coords::find()->orderBy(['timestamp'=>SORT_DESC])->limit(1)->all();
  $lastRowDate = $R[0]['timestamp'];
 
-$R = Coords::find()->select([
-    "DAYNAME('2018-02-28')"
-])->limit(1)->all();
+ $R = Coords::find()->orderBy(['timestamp'=>SORT_DESC])->where("DAYNAME(timestamp)='Sunday'")->limit(1)->all();
 
-var_dump($R);
+//var_dump($R);
 
-//$lastRowDate = $R[0]['timestamp'];
+$lastRowDate = $R[0]['timestamp'];
+var_dump($lastRowDate);
 
 //$lastRowDate = $model->getLastSunday($R);
 
-$lastRowHour = date('H',strtotime($lastRowDate));
+//$lastRowHour = date('H',strtotime($lastRowDate));
 
-if ($lastRowHour-$startHourList[$model->startHourList]>$periodTypeList[$model->periodTypeList]) {
+/* if ($lastRowHour-$startHourList[$model->startHourList]>$periodTypeList[$model->periodTypeList]) {
     $currentDayOk = true;
-    //var_dump($currentDayOk);
 } else {
     $currentDayOk = false;
-    //var_dump($currentDayOk);
-}
+} */
 
 // Функция №1 (других пока что нет)
 if ($model->functionList==1) {
@@ -74,8 +69,8 @@ if ($model->functionList==1) {
 
     // запрос к БД    
     $data = Coords::find()->where([
-        '>=','DATE(timestamp)',$rangeDay
-    ])->all();
+        '>=','DATE(timestamp)',$rangeDay,
+        ])->andWhere(['<=','DATE(timestamp)',$lastRowDate])->all();
 
     // обработка результата    
     $alertDay = 0;
@@ -107,12 +102,14 @@ if ($model->functionList==1) {
     $delim = 0;
     foreach (array_reverse($wait_prcnt) as $wp => $wd) {
         
-        if($delim++%7==0) {
-            print ('<br>--- Неделя №'.(int)($delim/7+1).'<br>');
-        }
+        //if($delim++%7==0) {
+        //    print ('<br>--- Неделя №'.(int)($delim/7+1).'<br>');
+        //}
         
         if ($alertDay == $wp) {
+            echo '<li>';
             print $wp.' ('. $model->dateru(date('l',strtotime($wp))).') -- сумма дня с '.$startHourList[$model->startHourList].' по '.(($startHourList[$model->startHourList]+$periodTypeList[$model->periodTypeList])%24).' ч. --> '.$wd." -- минимальное значение из представленных<br>";
+            echo '</li>';
         } else {
             print $wp.' ('. $model->dateru(date('l',strtotime($wp))).') -- сумма дня с '.$startHourList[$model->startHourList].' по '.(($startHourList[$model->startHourList]+$periodTypeList[$model->periodTypeList])%24).' ч. --> '.$wd."<br>";
         }
