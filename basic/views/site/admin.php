@@ -48,7 +48,7 @@ $days = $weeks*7 - 1;
 
 $R = Coords::find()->select([
     "DAYNAME('2018-02-28')"
-])->all();
+])->all()->limit(1);
 
 var_dump($R);
 
