@@ -68,7 +68,7 @@ if ($model->functionList==1) {
     // запрос к БД    
     $data = Coords::find()->where([
         '>=','DATE(timestamp)',$rangeDay,
-        ])->andWhere(['<=','DATE(timestamp)',$lastRowDate])->all();
+        ])->andWhere(['<','DATE(timestamp)',$lastRowDate])->all();
 
     // обработка результата    
     $alertDay = 0;
