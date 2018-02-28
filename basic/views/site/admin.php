@@ -27,12 +27,14 @@ if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 	<li><label>Недели</label>: <?= Html::encode($countWeekList[$model->countWeekList]) ?></li>
 </ul>
 
+<!-- PANEL -->
 <div class="panel panel-success">
-    <div class="panel panel-heading">
-    	Неделя
-    </div>
-    
-	<div class="eList panel-body">
+<div class="panel panel-heading">
+Неделя
+</div>
+
+<!-- PANEL BODY -->    
+<div class="eList panel-body">
 
 <?php 
 
@@ -41,13 +43,10 @@ $days = $weeks*7 - 1;
 
 // Дата крайней записи в таблице $lastRowDate
 // это задел на взятие крайнего дня в БД (предположительно текущий день)
- $R = Coords::find()->orderBy(['timestamp'=>SORT_DESC])->limit(1)->all();
- $lastRowDate = $R[0]['timestamp'];
+// $R = Coords::find()->orderBy(['timestamp'=>SORT_DESC])->limit(1)->all();
+// $lastRowDate = $R[0]['timestamp'];
 
- $R = Coords::find()->orderBy(['timestamp'=>SORT_DESC])->where("DAYNAME(timestamp)='Sunday'")->limit(1)->all();
-
-//var_dump($R);
-
+$R = Coords::find()->orderBy(['timestamp'=>SORT_DESC])->where("DAYNAME(timestamp)='Sunday'")->limit(1)->all();
 $lastRowDate = $R[0]['timestamp'];
 
 //$lastRowDate = $model->getLastSunday($R);
@@ -76,18 +75,13 @@ if ($model->functionList==1) {
     $wait_prcnt = array();
     
     foreach ($data as $e) {
-        
         $iterDay = date('Y-m-d',strtotime($e['timestamp']));
-        
         // если накопительный массив нулёвый, то к else, если там ноль или сумма, то пытаемся накопить данные этой выборки
         if (isset($wait_prcnt[$iterDay])) {
-            
             // если в рамках заданного часового периода, то накапливаем, если нет, то игнорируем этот временной промежуток (1/4 часа на итерацию на данный момент)
             if ($model->timeRange($e['timestamp'],$startHourList[$model->startHourList],$periodTypeList[$model->periodTypeList])) {
                 $wait_prcnt[$iterDay] += $e['wait_prcnt'];
-                //print();
             }
-            
         } else {
             // нулёвый инициализируем нулём (т.к. начало дневнего периода не бывает = 00-00, то можно упроститься и забить на техническую потерю значения в случае
             // начала отсчёта в 00-00 -- чего не бывает в указанном алгоритме. Используем это для инициализации массива)
@@ -98,27 +92,34 @@ if ($model->functionList==1) {
     
     $alertDay = array_search((min($wait_prcnt)),$wait_prcnt);
     
+    echo '<ul class="list-group">';
+    
     $delim = 0;
     foreach (array_reverse($wait_prcnt) as $wp => $wd) {
         
-        //if($delim++%7==0) {
-        //    print ('<br>--- Неделя №'.(int)($delim/7+1).'<br>');
-        //}
+        if($delim++%7==0) {
+            print ('<span class="badge">Неделя №'.(int)($delim/7+1).'</span><br>');
+        }
         
         if ($alertDay == $wp) {
-            echo '<li>';
-            print $wp.' ('. $model->dateru(date('l',strtotime($wp))).') -- сумма дня с '.$startHourList[$model->startHourList].' по '.(($startHourList[$model->startHourList]+$periodTypeList[$model->periodTypeList])%24).' ч. --> '.$wd." -- минимальное значение из представленных<br>";
+            echo '<li class="list-group-item-success">';
+            print $wp.' ('. $model->dateru(date('l',strtotime($wp))).') -- сумма дня с '.$startHourList[$model->startHourList].' по '.(($startHourList[$model->startHourList]+$periodTypeList[$model->periodTypeList])%24).' ч. --> '.$wd." -- минимальное значение<br>";
             echo '</li>';
         } else {
+            echo '<li class="list-group-item-default">';
             print $wp.' ('. $model->dateru(date('l',strtotime($wp))).') -- сумма дня с '.$startHourList[$model->startHourList].' по '.(($startHourList[$model->startHourList]+$periodTypeList[$model->periodTypeList])%24).' ч. --> '.$wd."<br>";
+            echo '</li>';
         }
     }
+    
+    echo '</ul>';
 
 }
 
 ?>
-
-	</div>
+<!-- PANEL END BODY -->
+</div>
+<!-- PANEL END -->
 </div>
 <?php
     
